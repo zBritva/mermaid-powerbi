@@ -1,0 +1,14 @@
+*.log
+**/.cache/**
+**/dist/**
+**/node_modules/**
+node_modules/**
+packages/visual/.tmp/**
+packages/visual/webpack.statistics.html
+.idea/**
+docs
+node_modules
+.tmp/*
+*webpack.statistics.html
+visuals-license-engine
+licenseGenerator.exe

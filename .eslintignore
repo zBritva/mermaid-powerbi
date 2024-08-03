@@ -1,0 +1,15 @@
+node_modules
+dist
+coverage
+test
+.eslintrc.js
+karma.conf.ts
+*webpack.config.js
+visuals-license-engine
+src/license.ts
+src/LicenseRequired.tsx
+assetProcessor.ts
+traceOptions.ts
+assetProcessor.js
+lib
+.tmp
