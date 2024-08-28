@@ -5,7 +5,7 @@ import React from 'react';
 import { useAppSelector } from './redux/hooks';
 // import { setSettings } from './redux/slice';
 // import { IVisualSettings } from './settings';
-import { convertData, sanitizeHTML } from './utils';
+import { convertData } from './utils';
 import MDEditor from '@uiw/react-md-editor';
 import rehypeSanitize from "rehype-sanitize";
 
@@ -18,6 +18,7 @@ import { hardReset } from './helpers';
 
 import { ErrorBoundary } from './Error';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const mermaid = require("../node_modules/mermaid/dist/mermaid.js");
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -265,6 +266,9 @@ export const Application: React.FC<ApplicationProps> = () => {
                             }}
                             rehypePlugins={[[rehypeSanitize]]}
                             source={clean}
+                            urlTransform={(url) => {
+                                return url;
+                            }}
                             // style={{ whiteSpace: 'pre-wrap' }}
                         />
                     </div>

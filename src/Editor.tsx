@@ -5,9 +5,9 @@ import rehypeSanitize from "rehype-sanitize";
 import { getCodeString } from 'rehype-rewrite';
 import { Table } from "./utils";
 import Handlebars from "handlebars";
-import { Root, Element, ElementContent, RootContent } from 'hast';
 
 const mermaid = require("../node_modules/mermaid/dist/mermaid.js");
+import { ErrorBoundary } from "./Error";
 
 export interface EditorProps {
     value: string;
@@ -22,7 +22,9 @@ export interface EditorProps {
 // eslint-disable-next-line powerbi-visuals/insecure-random
 const randomid = () => parseInt(String(Math.random() * 1e15), 10).toString(36);
 
-export const Code = ({ inline, children = [], className, ...props }) => {
+export const Code = (props) => {
+    const children = props?.children || [];
+    const className = props?.className;
     const demoid = React.useRef(`dome${randomid()}`);
     const [container, setContainer] = React.useState(null);
     const isMermaid =
@@ -88,7 +90,7 @@ export function Editor(props: EditorProps) {
                 }
             })
         } catch (err) {
-            return `<h4>${err.message}</h4><pre>${err.stack}</pre>`
+            return `\n\n${err.message}\n\n${err.stack}\n\n`;
         }
     }, [template]);
 
@@ -124,17 +126,22 @@ export function Editor(props: EditorProps) {
                                     onClick={props.onBackgroundClick}
                                     onContextMenu={props.onBackgroundContextMenu}
                                 >
-                                    <MDEditor.Markdown
-
-                                        components={{
-                                            code: Code
-                                        }}
-                                        rehypePlugins={[[rehypeSanitize]]}
-                                        source={hbout}
-                                    />
+                                    <ErrorBoundary>
+                                        <MDEditor.Markdown
+                                            components={{
+                                                code: Code
+                                            }}
+                                            rehypePlugins={[[rehypeSanitize]]}
+                                            source={hbout}
+                                            urlTransform={(url) => {
+                                                return url;
+                                            }}
+                                        />
+                                    </ErrorBoundary>
                                 </div>
                             )
                         }
+                        
                     }}
                     commands={[save, ...commands.getCommands()]}
                     highlightEnable={false}
