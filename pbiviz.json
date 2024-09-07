@@ -9,7 +9,7 @@
       "displayName": "Markdown & Mermaid Visual",
       "guid": "markdownMermaidVisual",
       "visualClassName": "Visual",
-      "version": "1.0.2.0",
+      "version": "1.1.0.0",
       "description": "Integrate Markdown and Mermaid render into Power BI",
       "supportUrl": "https://github.com/zBritva/mermaid-powerbi/issues",
       "gitHubUrl": "https://github.com/zBritva/mermaid-powerbi"

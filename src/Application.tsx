@@ -19,7 +19,7 @@ import { hardReset } from './helpers';
 import { ErrorBoundary } from './Error';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const mermaid = require("../node_modules/mermaid/dist/mermaid.js");
+import "mermaid";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ApplicationProps {
