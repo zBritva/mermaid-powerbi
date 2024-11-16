@@ -6,7 +6,7 @@ import { getCodeString } from 'rehype-rewrite';
 import { Table } from "./utils";
 import Handlebars from "handlebars";
 
-import * as mermaid from "mermaid";
+import mermaid from "mermaid";
 
 import { ErrorBoundary } from "./Error";
 
@@ -28,16 +28,21 @@ export const Code = (props) => {
     const className = props?.className;
     const demoid = React.useRef(`dome${randomid()}`);
     const [container, setContainer] = React.useState(null);
+
     const isMermaid =
         className && /^language-mermaid/.test(className.toLocaleLowerCase());
-    
+
     const code = children
         ? getCodeString(props.node.children)
         : children[0] || "";
 
     React.useEffect(() => {
         if (container && isMermaid && demoid.current && code) {
-            mermaid.default
+            mermaid
+                .initialize({
+                    securityLevel: "loose"
+                });
+            mermaid
                 .render(demoid.current, code)
                 .then(({ svg, bindFunctions }) => {
                     // eslint-disable-next-line powerbi-visuals/no-inner-outer-html
@@ -143,7 +148,7 @@ export function Editor(props: EditorProps) {
                                 </div>
                             )
                         }
-                        
+
                     }}
                     commands={[save, ...commands.getCommands()]}
                     highlightEnable={false}

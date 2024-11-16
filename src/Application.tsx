@@ -153,6 +153,23 @@ export const Application: React.FC<ApplicationProps> = () => {
         }
     }, [host, table, selectionManager])
 
+    const selectNode = React.useCallback((node: string) => {
+        const dataIndex = node
+        if (table.rows[dataIndex]) {
+            const selection = table.rows[dataIndex].selection;
+
+            selectionManager.select(selection);    
+        }
+    }, [selectionManager, table]);
+
+    React.useEffect(() => {
+        if (!(window as any).selectNode) {
+            (window as any).selectNode = function (a) {
+                selectNode(a);
+            }
+        }
+    }, [selectNode]);
+
     const content = React.useMemo(() => {
         hardReset()
         Handlebars.unregisterHelper('useColor')
@@ -235,6 +252,7 @@ export const Application: React.FC<ApplicationProps> = () => {
                         <h4>Template is empty</h4>
                         <p>Read more about the visual in official documentation:</p>
                         <a onClick={onOpenUrl} href='https://ilfat-galiev.im/docs/markdown-visual/'>https://ilfat-galiev.im/docs/markdown-visual/</a>
+                        <a onClick={onOpenUrl} href='https://ilfat-galiev.im/docs/markdown-visual/version-1.1.1.0'>Changelog 1.1.1.0</a>
                     </div>
                 ) : 
                 editMode === powerbi.EditMode.Advanced ?
