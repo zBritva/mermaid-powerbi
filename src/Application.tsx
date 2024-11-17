@@ -20,6 +20,7 @@ import { ErrorBoundary } from './Error';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import "mermaid";
+import { Resource } from './Resources';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ApplicationProps {
@@ -33,11 +34,14 @@ export const Application: React.FC<ApplicationProps> = () => {
     const host = useAppSelector((state) => state.options.host);
 
     const dataView = useAppSelector((state) => state.options.dataView);
+    const settings = useAppSelector((state) => state.options.settings);
     const viewport = useAppSelector((state) => state.options.viewport);
     const templateSource = useAppSelector((state) => state.options.template);
     const editMode = useAppSelector((state) => state.options.mode);
     const [isSaved, setIsSaved] = React.useState<boolean>(true);
     const [value, setValue] = React.useState<string>(null);
+
+    const resources = JSON.parse(settings.resources.images || "[]") as Resource[];
 
     React.useEffect(() => {
         if (templateSource.trim() !== '' && value === null) {
@@ -49,6 +53,20 @@ export const Application: React.FC<ApplicationProps> = () => {
         setValue(value)
         setIsSaved(false);
     }, [setValue, value]);
+
+    const onSaveResource = React.useCallback((resource: Resource[]) => {
+        host.persistProperties({
+            replace: [
+                {
+                    objectName: 'resources',
+                    selector: undefined,
+                    properties: {
+                        images: JSON.stringify(resource)
+                    }
+                }
+            ]
+        })
+    }, [host]);
 
     const onOpenUrl = React.useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {  
         host.launchUrl((e.target as HTMLElement).getAttribute('href'));
@@ -252,7 +270,7 @@ export const Application: React.FC<ApplicationProps> = () => {
                         <h4>Template is empty</h4>
                         <p>Read more about the visual in official documentation:</p>
                         <a onClick={onOpenUrl} href='https://ilfat-galiev.im/docs/markdown-visual/'>https://ilfat-galiev.im/docs/markdown-visual/</a>
-                        <a onClick={onOpenUrl} href='https://ilfat-galiev.im/docs/markdown-visual/version-1.1.1.0'>Changelog 1.1.1.0</a>
+                        <a onClick={onOpenUrl} href='https://ilfat-galiev.im/docs/markdown-visual/changelog'>Changelog</a>
                     </div>
                 ) : 
                 editMode === powerbi.EditMode.Advanced ?
@@ -265,6 +283,8 @@ export const Application: React.FC<ApplicationProps> = () => {
                             width={viewport.width}
                             onBackgroundClick={onBackgroundClick}
                             onBackgroundContextMenu={onBackgroundContextMenu}
+                            resources={resources}
+                            onSaveResources={onSaveResource}
                         />
                     </div>:
                     <div
@@ -285,6 +305,10 @@ export const Application: React.FC<ApplicationProps> = () => {
                             rehypePlugins={[[rehypeSanitize]]}
                             source={clean}
                             urlTransform={(url) => {
+                                const res = resources.find(r => r.name === url);
+                                if (res) {
+                                    return res.value as string;
+                                }
                                 return url;
                             }}
                             // style={{ whiteSpace: 'pre-wrap' }}

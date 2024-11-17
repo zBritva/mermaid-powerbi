@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import MDEditor, { commands } from '@uiw/react-md-editor/nohighlight';
@@ -9,15 +10,20 @@ import Handlebars from "handlebars";
 import mermaid from "mermaid";
 
 import { ErrorBoundary } from "./Error";
+import { Resource, Resources } from "./Resources";
+import { Tabs } from "antd";
+
 
 export interface EditorProps {
     value: string;
     onChange: (value: string, event?: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+    onSaveResources: (resources: Resource[]) => void;
     onBackgroundClick: (e: React.MouseEvent<HTMLElement>) => void;
     onBackgroundContextMenu: (e: React.MouseEvent) => void;
     height: number;
     width: number;
     table: Table;
+    resources: Resource[];
 }
 
 // eslint-disable-next-line powerbi-visuals/insecure-random
@@ -74,14 +80,26 @@ export const Code = (props) => {
     return <code className={className}>{children}</code>;
 };
 
-export function Editor(props: EditorProps) {
+export function Editor({
+    onChange,
+    onSaveResources,
+    height,
+    table,
+    onBackgroundClick,
+    onBackgroundContextMenu,
+    value: currentValue,
+    width,
+    resources
+}: EditorProps) {
     const [value, setValue] = React.useState(null);
+
+    const [isOpenResources, setOpenResources] = React.useState(false);
 
     React.useEffect(() => {
         if (value == null) {
-            setValue(props.value);
+            setValue(currentValue);
         }
-    }, [props.value, setValue, value]);
+    }, [currentValue, setValue, value]);
 
     const template = React.useMemo(() => {
         return Handlebars.compile(value ?? "");
@@ -90,10 +108,10 @@ export function Editor(props: EditorProps) {
     const hbout = React.useMemo(() => {
         try {
             return template({
-                table: props.table,
+                table: table,
                 viewport: {
-                    width: props.width,
-                    height: props.height
+                    width: width,
+                    height: height
                 }
             })
         } catch (err) {
@@ -101,59 +119,83 @@ export function Editor(props: EditorProps) {
         }
     }, [template]);
 
-    const save = {
-        name: "save",
-        keyCommand: "save",
-        buttonProps: { "aria-label": "Save" },
-        icon: (
-            <svg viewBox="0 0 32 16" width="24px" height="12px">
-                <text color="currentColor" x="0" y="12">
-                    Save
-                </text>
-            </svg>
-        ),
-        execute: (state, api) => {
-            props.onChange(value);
-        }
-    };
+    const saveButton = React.useMemo(() => {
+        return {
+            name: "save",
+            keyCommand: "save",
+            buttonProps: { "aria-label": "Save" },
+            icon: (
+                <svg viewBox="0 0 32 16" width="24px" height="12px">
+                    <text color="currentColor" x="0" y="12">
+                        Save
+                    </text>
+                </svg>
+            ),
+            execute: (state, api) => {
+                onChange(value);
+            }
+        };
+    }, [onChange, value]);
 
     return (
         <>
-            <div className="container" data-color-mode="light">
-                <MDEditor
-                    height={props.height}
-                    value={value}
-                    onChange={(value) => {
-                        setValue(value);
-                    }}
-                    components={{
-                        preview: (source, state, dispath) => {
-                            return (
-                                <div
-                                    onClick={props.onBackgroundClick}
-                                    onContextMenu={props.onBackgroundContextMenu}
-                                >
-                                    <ErrorBoundary>
-                                        <MDEditor.Markdown
-                                            components={{
-                                                code: Code
-                                            }}
-                                            rehypePlugins={[[rehypeSanitize]]}
-                                            source={hbout}
-                                            urlTransform={(url) => {
-                                                return url;
-                                            }}
-                                        />
-                                    </ErrorBoundary>
-                                </div>
-                            )
-                        }
-
-                    }}
-                    commands={[save, ...commands.getCommands()]}
-                    highlightEnable={false}
-                />
-            </div>
+            <Tabs
+                className="tabs-header"
+                defaultActiveKey="1"
+                items={[
+                    {
+                        key: '1',
+                        label: 'Editor',
+                        children: (<>
+                            <div className="container" data-color-mode="light">
+                                <MDEditor
+                                    height={height}
+                                    value={value}
+                                    onChange={(value) => {
+                                        setValue(value);
+                                    }}
+                                    components={{
+                                        preview: (source, state, dispath) => {
+                                            return (
+                                                <div
+                                                    onClick={onBackgroundClick}
+                                                    onContextMenu={onBackgroundContextMenu}
+                                                >
+                                                    <ErrorBoundary>
+                                                        <MDEditor.Markdown
+                                                            components={{
+                                                                code: Code
+                                                            }}
+                                                            rehypePlugins={[[rehypeSanitize]]}
+                                                            source={hbout}
+                                                            urlTransform={(url) => {
+                                                                const res = resources.find(r => r.name === url);
+                                                                if (res) {
+                                                                    return res.value as string;
+                                                                }
+                                                                return url;
+                                                            }}
+                                                        />
+                                                    </ErrorBoundary>
+                                                </div>
+                                            )
+                                        }
+                                    }}
+                                    commands={[saveButton, ...commands.getCommands()]}
+                                    highlightEnable={false}
+                                />
+                            </div>
+                        </>)
+                    },
+                    {
+                        key: '2',
+                        label: 'Resources',
+                        children: (<>
+                            <Resources onSaveResources={onSaveResources} height={height} resources={resources} width={width} />
+                        </>)
+                    }
+                ]}
+            />
         </>
 
     );

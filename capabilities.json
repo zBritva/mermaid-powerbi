@@ -7,6 +7,15 @@
         }
     ],
     "objects": {
+        "resources": {
+            "properties": {
+                "images": {
+                    "type": {
+                        "text": true
+                    }
+                }
+            }
+        },
         "template": {
             "description": "Template",
             "descriptionKey": "Visual_Chart",
