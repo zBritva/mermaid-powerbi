@@ -38,6 +38,9 @@ export const Code = (props) => {
     const isMermaid =
         className && /^language-mermaid/.test(className.toLocaleLowerCase());
 
+    const isStyling =
+        className && /^language-style/.test(className.toLocaleLowerCase());
+
     const code = children
         ? getCodeString(props.node.children)
         : children[0] || "";
@@ -72,12 +75,31 @@ export const Code = (props) => {
     if (isMermaid) {
         return (
             <React.Fragment>
-                <code id={demoid.current} style={{ display: "none" }} />
-                <code className={className + " mermaid"} ref={refElement} data-name="mermaid" />
+                <ErrorBoundary>
+                    <code id={demoid.current} style={{ display: "none" }} />
+                    <code className={className + " mermaid"} ref={refElement} data-name="mermaid" />
+                </ErrorBoundary>
             </React.Fragment>
         );
     }
-    return <code className={className}>{children}</code>;
+    if (isStyling) {
+        if (code.trim() == "") {
+            return null;
+        }
+        return (
+            <ErrorBoundary>
+                <React.Fragment>
+                    <style dangerouslySetInnerHTML={{
+                        __html: code
+                    }} className={className + " style"} data-name="style" >
+                    </style>
+                </React.Fragment>
+            </ErrorBoundary>
+        )
+    }
+    return (<ErrorBoundary>
+        <code className={className}>{children.toString()}</code>
+    </ErrorBoundary>);
 };
 
 export function Editor({
