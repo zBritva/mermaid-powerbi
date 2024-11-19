@@ -80,6 +80,11 @@ export class Visual implements IVisual {
                 }
             ];
         }
+        if (options.objectName === 'resources') {
+            return <VisualObjectInstance[]>[
+                
+            ];
+        }
         return VisualSettings.enumerateObjectInstances(this.settings || VisualSettings.getDefault(), options);
     }
 }
