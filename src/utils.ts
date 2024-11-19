@@ -7,9 +7,9 @@ import IVisualHost = powerbiVisualsApi.extensibility.visual.IVisualHost;
 
 import { utcParse } from "d3-time-format";
 
-import { Config as DompurifyConfig, sanitize } from "dompurify";
+import * as dompurify from "dompurify";
 
-export const defaultDompurifyConfig = <DompurifyConfig>{
+export const defaultDompurifyConfig = <dompurify.Config>{
     RETURN_DOM: false,
     SANITIZE_DOM: true,
     ALLOW_ARIA_ATTR: true,
@@ -101,7 +101,7 @@ export interface Table {
 }
 
 export function sanitizeHTML(dirty: string) {
-    return sanitize(dirty, defaultDompurifyConfig) as string;
+    return dompurify.sanitize(dirty, defaultDompurifyConfig) as string;
 }
 
 export function safeParse(echartJson: string): any {
