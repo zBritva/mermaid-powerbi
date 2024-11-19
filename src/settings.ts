@@ -7,15 +7,21 @@ import DataViewObjectsParser = dataViewObjectsParser.DataViewObjectsParser;
 export interface IVisualSettings {
     template: Template;
     resources: ResourcesSettings;
+    view: ViewSettings;
 }
 
 export class VisualSettings extends DataViewObjectsParser implements IVisualSettings {
     public template: Template = new Template();
     public resources: ResourcesSettings = new ResourcesSettings();
+    public view: ViewSettings = new ViewSettings();
 }
 
 export class ResourcesSettings {
     public images: string = "[]";
+}
+
+export class ViewSettings {
+    public hideDefaultTemplateMessage: boolean = false;
 }
 
 export class Template {

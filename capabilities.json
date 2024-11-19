@@ -138,6 +138,20 @@
                 }
             }
         },
+        "view": {
+            "displayName": "View settings",
+            "descriptionKey": "Charticulator_View",
+            "properties": {
+            "hideDefaultTemplateMessage": {
+                "displayName": "Hide default template message",
+                "description": "Hides default template message on loading the visual",
+                "displayNameKey": "Charticulator_HideDefaultTemplateMessage",
+                "type": {
+                    "bool": true
+                    }
+                }
+            }
+        },
         "backgroundFetchData": {
             "description": "Fetch more data in background",
             "descriptionKey": "Visual_FetchDataDescription",

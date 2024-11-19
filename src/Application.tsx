@@ -265,7 +265,7 @@ export const Application: React.FC<ApplicationProps> = () => {
     return (<>
         <>
             <ErrorBoundary>
-                {templateSource.trim() === '' && editMode === powerbi.EditMode.Default ? (
+                {templateSource.trim() === '' && !settings.view.hideDefaultTemplateMessage && editMode === powerbi.EditMode.Default ? (
                     <div className='tutorial'>
                         <h4>Template is empty</h4>
                         <p>Read more about the visual in official documentation:</p>
