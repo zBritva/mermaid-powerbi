@@ -33,7 +33,7 @@ export const Code = (props) => {
     const children = props?.children || [];
     const className = props?.className;
     const demoid = React.useRef(`dome${randomid()}`);
-    const [container, setContainer] = React.useState(null);
+    const [container, setContainer] = React.useState<HTMLElement>(null);
 
     const isMermaid =
         className && /^language-mermaid/.test(className.toLocaleLowerCase());
@@ -49,7 +49,9 @@ export const Code = (props) => {
         if (container && isMermaid && demoid.current && code) {
             mermaid
                 .initialize({
-                    securityLevel: "loose"
+                    securityLevel: "loose",
+                    maxEdges: 30000,
+                    secure: ['secure', 'securityLevel', 'startOnLoad', 'maxTextSize', 'suppressErrorRendering'],
                 });
             mermaid
                 .render(demoid.current, code)
@@ -62,6 +64,8 @@ export const Code = (props) => {
                 })
                 .catch((error) => {
                     console.log("error:", error);
+                    // eslint-disable-next-line powerbi-visuals/no-inner-outer-html
+                    container.textContent = code;
                 });
         }
     }, [container, isMermaid, code, demoid]);
