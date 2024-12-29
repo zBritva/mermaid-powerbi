@@ -74,6 +74,8 @@ export const Application: React.FC<ApplicationProps> = () => {
         e.stopPropagation();
     }, [host]);
 
+    const launchUrl = React.useCallback((url: string) => host.launchUrl(url), [host];)
+
     const selectionManager = React.useMemo(() => {
         return host.createSelectionManager();
     }, [host]);
@@ -285,6 +287,7 @@ export const Application: React.FC<ApplicationProps> = () => {
                             onBackgroundContextMenu={onBackgroundContextMenu}
                             resources={resources}
                             onSaveResources={onSaveResource}
+                            launchUrl={launchUrl}
                         />
                     </div>:
                     <div
