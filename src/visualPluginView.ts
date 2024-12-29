@@ -9,7 +9,7 @@ var markdownMermaidVisual: IVisualPlugin = {
     name: 'markdownMermaidVisual',
     displayName: 'Markdown & Mermaid Visual',
     class: 'Visual',
-    apiVersion: '5.4.0',
+    apiVersion: '5.11.0',
     create: (options?: VisualConstructorOptions) => {
         if (Visual) {
             return new Visual(options);

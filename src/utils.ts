@@ -7,7 +7,7 @@ import IVisualHost = powerbiVisualsApi.extensibility.visual.IVisualHost;
 
 import { utcParse } from "d3-time-format";
 
-import * as dompurify from "dompurify";
+import dompurify from "dompurify";
 
 export const defaultDompurifyConfig = <dompurify.Config>{
     RETURN_DOM: false,
