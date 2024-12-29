@@ -38,7 +38,6 @@ export const Application: React.FC<ApplicationProps> = () => {
     const viewport = useAppSelector((state) => state.options.viewport);
     const templateSource = useAppSelector((state) => state.options.template);
     const editMode = useAppSelector((state) => state.options.mode);
-    const [isSaved, setIsSaved] = React.useState<boolean>(true);
     const [value, setValue] = React.useState<string>(null);
 
     const resources = JSON.parse(settings.resources.images || "[]") as Resource[];
@@ -51,7 +50,6 @@ export const Application: React.FC<ApplicationProps> = () => {
 
     const onChangeValue = React.useCallback((value: string) => {
         setValue(value)
-        setIsSaved(false);
     }, [setValue, value]);
 
     const onSaveResource = React.useCallback((resource: Resource[]) => {
@@ -74,7 +72,7 @@ export const Application: React.FC<ApplicationProps> = () => {
         e.stopPropagation();
     }, [host]);
 
-    const launchUrl = React.useCallback((url: string) => host.launchUrl(url), [host];)
+    const launchUrl = React.useCallback((url: string) => host.launchUrl(url), [host]);
 
     const selectionManager = React.useMemo(() => {
         return host.createSelectionManager();
@@ -261,7 +259,6 @@ export const Application: React.FC<ApplicationProps> = () => {
 
         e?.preventDefault()
         e?.stopPropagation()
-        setIsSaved(true);
     }, [host, value]);
 
     return (<>
