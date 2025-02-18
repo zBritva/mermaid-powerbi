@@ -103,7 +103,7 @@ export const Code = (props) => {
         )
     }
     return (<ErrorBoundary>
-        <code className={className}>{children.toString()}</code>
+        <code className={className}>{children}</code>
     </ErrorBoundary>);
 };
 
