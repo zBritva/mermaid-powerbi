@@ -186,6 +186,8 @@ export function Editor({
             <Tabs
                 className="tabs-header"
                 defaultActiveKey="1"
+                onChange={(key: string) => {
+                }}
                 items={[
                     {
                         key: '1',
@@ -237,6 +239,68 @@ export function Editor({
                         children: (<>
                             <Resources onSaveResources={onSaveResources} height={height} resources={resources} width={width} />
                         </>)
+                    },
+                    {
+                        key: 'donate',
+                        label: 'About',
+                        children: (
+                        <div
+                            className="about"
+                            style={{
+                                height: `${height * (8 / 10)}px`
+                            }}
+                            onClick={(e: any) => {
+                            launchUrl(e.target.href)
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }}>
+                            <div className="container">
+                                <h2>AVEIRUN LLC - Markdown & Mermaid Visual</h2>
+                                
+                                <div className="section">
+                                    <p>Markdown & Mermaid Visual is a free and open-source tool designed to enhance data visualization within Power BI. It allows users to create rich markdown-based content and dynamic diagrams using Mermaid.js. The project is licensed under the <a href="https://github.com/zBritva/mermaid-powerbi/blob/master/LICENSE">GNU General Public License v3.0</a>.</p>
+                                </div>
+                                
+                                <div className="section">
+                                    <h3>Support Development</h3>
+                                    <p>If you find this project useful, consider supporting its development through:</p>
+                                    <p><a href="https://github.com/sponsors/aveirun">GitHub Sponsors</a></p>
+                                </div>
+                                
+                                <div className="section">
+                                    <h3>Source Code & Contributions</h3>
+                                    <p>The complete source code is available on <strong>GitHub</strong>:</p>
+                                    <p><a href="https://github.com/zBritva/mermaid-powerbi">GitHub Repository</a></p>
+                                </div>
+                                
+                                <div className="section">
+                                    <h3>Technology & Dependencies</h3>
+                                    <p>The visual is powered by several third-party libraries:</p>
+                                    <ul>
+                                        <li><a href="https://github.com/uiwjs/react-md-editor">react-md-editor</a> – Markdown rendering</li>
+                                        <li><a href="https://github.com/mermaid-js/mermaid">mermaid-js</a> – Diagram and flowchart visualization</li>
+                                        <li><a href="https://github.com/zBritva/mermaid-powerbi/blob/master/package.json#L13">Full list of dependencies</a></li>
+                                    </ul>
+                                </div>
+                                
+                                <div className="section">
+                                    <h3>Changelog & Updates</h3>
+                                    <p>Stay updated with new features and improvements:</p>
+                                    <p><a href="https://ilfat-galiev.im/docs/markdown-visual/changelog">Changelog</a></p>
+                                </div>
+                                
+                                <div className="section">
+                                    <h3>Support & Community</h3>
+                                    <p>Your feedback and contributions help improve the project! You can:</p>
+                                    <ul>
+                                        <li><a href="https://github.com/zBritva/mermaid-powerbi/discussions">Share ideas</a></li>
+                                        <li><a href="https://github.com/zBritva/mermaid-powerbi/issues">Report issues</a></li>
+                                        <li><a href="https://www.bibb.pro/">Share your experience</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>),
+
                     }
                 ]}
             />
